@@ -11,5 +11,5 @@ import com.sist.vo.ProgramVO;
 public interface ProgramListMapper {
 
 	public List<ProgramVO> programListData(Map map);
-	
+	public int programTotalPage(Map map);
 }

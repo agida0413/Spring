@@ -275,7 +275,7 @@ padding-bottom:10px;
     	<div class="row findNum">	
 				<!-- 검색 결과 숫자 카운트 -->
 				<div class="">
-					<p>[전체 <em>6,472</em>건, 현재페이지 <em>1</em>/648]</p>
+					<p>[전체 <em>{{size}}</em>건, 현재페이지 <em>{{curpage}}</em>/{{totalpage}}]</p>
 				</div>
 				<!--// 검색 결과 숫자 카운트 -->
   		</div>
@@ -329,7 +329,18 @@ padding-bottom:10px;
   		
   		</div>
   		<!-- 검색리스트 끝-->
-  	
+  			<div class="row text-center">
+  			 <ul class="pagination">
+  			 		 <li @click="firstpage"><a href="#" v-if="curpage>1">&lt;&lt;</a></li>
+				  <li @click="prev()"><a href="#" v-if="start>1">&lt;</a></li>
+				  <li v-for="i in range(start,end)" :class="curpage===i?'active':''" @click="move(i)"><a href="#">{{i}}</a></li>
+				 
+				  <li @click="next()"><a href="#" v-if="end<totalpage">&gt;</a></li>
+				   <li @click="lastpage"><a href="#" v-if="curpage!==end">&gt;&gt;</a></li>
+				   
+				   
+				</ul> 
+  			</div>
   	
   	
   		
@@ -355,6 +366,11 @@ let option=Vue.createApp({
 			major_filedList:[],
 			minor_fieldList:[],
 			programList:[],
+			curpage:1,
+			totalpage:0,
+			start:0,
+			end:0,
+			size:0,
 			Option:{
 			state:'',
 			city:'',
@@ -411,7 +427,7 @@ let option=Vue.createApp({
 		findClick(){
 			
 			
-			
+				this.curpage=1
 			 
 	            if (this.ssCondition.N) this.ssConditionString += 'N';
 	            if (this.ssCondition.C) this.ssConditionString += 'C';
@@ -454,7 +470,7 @@ let option=Vue.createApp({
 				};
 		    
 		   this.callList()
-		
+			
 		   this.ssConditionString=''
 		   this.vtConditionString=''
 		   this.weekString=''
@@ -465,20 +481,77 @@ let option=Vue.createApp({
 			    params: {
 			        ssConditionString: this.initialState.ssConditionString,
 			        vtConditionString:this.initialState.vtConditionString,
-			        weekString:this.initialState.weekString
+			        weekString:this.initialState.weekString,
+			        page:this.curpage
 			    },
 			    headers: {
 			        'Content-Type': 'application/json;charset=UTF-8'
 			    }
 			}).then(response => {
 			    this.programList=response.data
-			    console.log(this.programList)
+			   
+			   
 			}).catch(error => {
 			   
 			});
+			
+			this.paging()
 		},
-		test(){
-			console.log(this.initialState)
+		paging(){
+			axios.post("../program/listPage_vue.do", this.initialState.Option, {
+			    params: {
+			        ssConditionString: this.initialState.ssConditionString,
+			        vtConditionString:this.initialState.vtConditionString,
+			        weekString:this.initialState.weekString,
+			        page:this.curpage
+			    },
+			    headers: {
+			        'Content-Type': 'application/json;charset=UTF-8'
+			    }
+			}).then(response => {
+			 this.totalpage=response.data.totalpage
+			 this.start=response.data.start
+			 this.end=response.data.end
+			 this.curpage=response.data.curpage
+			 this.size=response.data.size
+			 
+			
+			
+			}).catch(error => {
+			   
+			});
+			
+		},
+		
+		range(start,end){
+			let arr=[]
+			console.log(start)
+			console.log(end)
+			let size=end-start;
+			for(let i=0;i<=size;i++){
+				arr[i]=start;
+				start++;
+			}
+			return arr;
+		},
+		next(){
+			this.curpage=this.end+1
+			this.callList()
+		},
+		prev(){
+			this.curpage=this.start-1
+			this.callList()
+		},
+		move(page){
+			this.curpage=page
+			this.callList()
+		},
+		firstpage(){
+			this.curpage=1
+			this.callList()
+		},
+		lastpage(){
+			this.curpage=this.totalpage
 			this.callList()
 		},
 		optionReset(){
@@ -491,9 +564,9 @@ let option=Vue.createApp({
 			this.Option.collect_state='모집중'
 			this.Option.ss=''
 			this.Option.v_start= new Date().toISOString().split('T')[0] // 오늘 날짜
-			this.Option.v_end= new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0]// 오늘 날짜로부터 1달 후
+			this.Option.v_end= new Date(new Date().setMonth(new Date().getMonth() + 8)).toISOString().split('T')[0]// 오늘 날짜로부터 1달 후
 			this.Option.collect_start= new Date().toISOString().split('T')[0] // 오늘 날짜
-			this.Option.collect_end= new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0]// 오늘 날짜로부터 1달 후
+			this.Option.collect_end= new Date(new Date().setMonth(new Date().getMonth() + 8)).toISOString().split('T')[0]// 오늘 날짜로부터 1달 후
 			
 			    
 			this.ssCondition.N= true

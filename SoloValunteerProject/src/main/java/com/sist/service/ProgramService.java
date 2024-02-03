@@ -17,4 +17,6 @@ public interface ProgramService {
 	
 	//프로그램
 	public List<ProgramVO> programListData(Map map);
+	
+	public int programTotalPage(Map map);
 }
