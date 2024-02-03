@@ -6,5 +6,5 @@ import lombok.Data;
 public class FoodVO {
    private int fno;
    private double score; 
-   private String poster,name,address,phone,price,time,type,theme,seat;
+   private String poster,name,address,phone,price,time,type,theme,seat,session;
 }
