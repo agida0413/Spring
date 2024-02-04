@@ -61,6 +61,10 @@ opacity:0.8;
  border-bottom: 1px rgba(0, 0, 0, 0.5) solid; /* 투명도를 조절하는 부분: 0.5는 50% 투명 */
 padding-bottom:10px;
 }
+
+a.link:hover{
+  cursor: pointer;
+}
 /* 셀렉트 박스 스타일 */
 
   
@@ -274,8 +278,12 @@ padding-bottom:10px;
     	<!-- 검색결과갯수정보 -->	
     	<div class="row findNum">	
 				<!-- 검색 결과 숫자 카운트 -->
-				<div class="">
+				<div class="" v-if="size!=0">
 					<p>[전체 <em>{{size}}</em>건, 현재페이지 <em>{{curpage}}</em>/{{totalpage}}]</p>
+				</div>
+				<!-- 검색결과 없을시 -->
+				<div class="" v-if="size==0">
+					<p>[전체 <em>{{size}}</em>건]</p>
 				</div>
 				<!--// 검색 결과 숫자 카운트 -->
   		</div>
@@ -285,9 +293,9 @@ padding-bottom:10px;
   		
   		<!-- 검색리스트 -->
   		<div class="row nextline" v-for="vo in programList">
-  		
+  			<a :href="'../program/detail.do?vno='+vo.vno" style="color:black">
   			<div class="findList">
-  		
+  				
 	  			<div class="col-sm-10">
 	  				<div class="" style="margin-top:15px; margin-bottom:10px;">
 						<!-- 봉사 분야 -->	
@@ -326,17 +334,25 @@ padding-bottom:10px;
 				</div>				
 				
   		   </div>
-  		
+  		</a>
   		</div>
   		<!-- 검색리스트 끝-->
+  		
+  		<!-- 검색결과없음 -->
+  		<div class="row" v-if="size==0" style="margin-top:20px;">
+  		<span style="font-size:25px; opacity:0.8;">검색 결과가 없습니다.</span>
+  		</div>
+  		
+  		
+  		<!-- 페이징 -->
   			<div class="row text-center">
-  			 <ul class="pagination">
-  			 		 <li @click="firstpage"><a href="#" v-if="curpage>1">&lt;&lt;</a></li>
-				  <li @click="prev()"><a href="#" v-if="start>1">&lt;</a></li>
-				  <li v-for="i in range(start,end)" :class="curpage===i?'active':''" @click="move(i)"><a href="#">{{i}}</a></li>
+  			 <ul class="pagination" v-if="totalpage!=0">
+  			 		 <li @click="firstpage"><a v-if="curpage>1" class="link">&lt;&lt;</a></li>
+				  <li @click="prev()"><a v-if="start>1" class="link">&lt;</a></li>
+				  <li v-for="i in range(start,end)" :class="curpage===i?'active':''" @click="move(i)"><a class="link">{{i}}</a></li>
 				 
-				  <li @click="next()"><a href="#" v-if="end<totalpage">&gt;</a></li>
-				   <li @click="lastpage"><a href="#" v-if="curpage!==end">&gt;&gt;</a></li>
+				  <li @click="next()"><a v-if="end<totalpage" class="link">&gt;</a></li>
+				   <li @click="lastpage"><a v-if="curpage!==totalpage" class="link">&gt;&gt;</a></li>
 				   
 				   
 				</ul> 
@@ -357,7 +373,7 @@ padding-bottom:10px;
   
     
 <script>
-let option=Vue.createApp({
+let programList=Vue.createApp({
 	data(){
 		return{
 			  initialState:[], 
@@ -408,7 +424,9 @@ let option=Vue.createApp({
 		}
 		
 	},
-	
+	mounted(){
+		this.findClick()
+	},
 	methods:{
 		stateChange(){
 			axios.get("../program/stateChange_vue.do",{params:this.Option}).then(response=>{

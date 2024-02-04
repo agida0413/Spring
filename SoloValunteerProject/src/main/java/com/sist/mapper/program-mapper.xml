@@ -6,14 +6,14 @@
  <mapper namespace="com.sist.mapper.ProgramListMapper">
 
 <select id="programListData" parameterType="map" resultType="ProgramVO">
-SELECT active_Type,major_field,minor_field,title,
+SELECT vno,active_Type,major_field,minor_field,title,
 TO_CHAR(collect_start,'YYYY.MM.DD') as dbCollect_start,
 TO_CHAR(collect_end,'YYYY.MM.DD') as dbCollect_end,
 TO_CHAR(v_start,'YYYY.MM.DD') as dbV_start,
 TO_CHAR(v_end,'YYYY.MM.DD') as dbV_end,
 runtime,si,gu,centername,collect_state,num
-FROM (SELECT active_type,major_field,minor_field,title,collect_start,collect_end,v_start,v_end,runtime,si,gu,centername,collect_state,rownum as num
-FROM (SELECT /*+INDEX(v_program vno_pk)*/active_type,major_field,minor_field,title,collect_start,collect_end,v_start,v_end,runtime,si,gu,centername,collect_state
+FROM (SELECT vno,active_type,major_field,minor_field,title,collect_start,collect_end,v_start,v_end,runtime,si,gu,centername,collect_state,rownum as num
+FROM (SELECT /*+INDEX(v_program vno_pk)*/vno,active_type,major_field,minor_field,title,collect_start,collect_end,v_start,v_end,runtime,si,gu,centername,collect_state
 FROM v_program
 WHERE (
 si LIKE '%'||#{vo.state}||'%' AND 

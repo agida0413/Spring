@@ -24,4 +24,10 @@ public class ProgramListDAO {
 	public int programTotalPage(Map map) {
 		return mapper.programTotalPage(map);
 	}
+	
+	public ProgramVO programDetailData(int vno) {
+		return mapper.programDetailData(vno);
+	}
+	
+	
 }

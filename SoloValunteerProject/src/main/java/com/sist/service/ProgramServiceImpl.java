@@ -56,6 +56,14 @@ public class ProgramServiceImpl implements ProgramService {
 		// TODO Auto-generated method stub
 		return pDao.programTotalPage(map);
 	}
+
+	@Override
+	public ProgramVO programDetailData(int vno) {
+		// TODO Auto-generated method stub
+		return pDao.programDetailData(vno);
+	}
+
+	
 	
 	
 }

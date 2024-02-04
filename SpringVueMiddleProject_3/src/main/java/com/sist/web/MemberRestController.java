@@ -34,4 +34,6 @@ public class MemberRestController {
 		return result;
 		
 	}
+	
+	
 }

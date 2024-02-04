@@ -19,4 +19,8 @@ public interface ProgramService {
 	public List<ProgramVO> programListData(Map map);
 	
 	public int programTotalPage(Map map);
+	
+	public ProgramVO programDetailData(int vno);
+	
+
 }

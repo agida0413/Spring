@@ -1,5 +1,7 @@
 package com.sist.web;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.sist.service.ProgramService;
 import com.sist.vo.OptionVO;
+import com.sist.vo.ProgramVO;
 
 @Controller
 public class ProgramController {
@@ -41,5 +44,13 @@ public class ProgramController {
 		model.addAttribute("mjList",mjList);
 		
 		return "program/list";
+	}
+	
+	
+	@RequestMapping("program/detail.do")
+	public String programDetail(int vno,Model model) {
+		ProgramVO vo=service.programDetailData(vno);
+		model.addAttribute("vo",vo);	
+		return "program/detail";
 	}
 }
