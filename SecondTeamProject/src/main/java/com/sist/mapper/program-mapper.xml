@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.sist.mapper.ProgramListMapper">
+
+<select id="programListData" parameterType="map" resultType="ProgramVO">
+SELECT vno,active_Type,major_field,minor_field,title,
+TO_CHAR(collect_start,'YYYY.MM.DD') as dbCollect_start,
+TO_CHAR(collect_end,'YYYY.MM.DD') as dbCollect_end,
+TO_CHAR(v_start,'YYYY.MM.DD') as dbV_start,
+TO_CHAR(v_end,'YYYY.MM.DD') as dbV_end,
+runtime,si,gu,centername,collect_state,num
+FROM (SELECT vno,active_type,major_field,minor_field,title,collect_start,collect_end,v_start,v_end,runtime,si,gu,centername,collect_state,rownum as num
+FROM (SELECT /*+INDEX(v_program vno_pk)*/vno,active_type,major_field,minor_field,title,collect_start,collect_end,v_start,v_end,runtime,si,gu,centername,collect_state
+FROM v_program
+WHERE (
+si LIKE '%'||#{vo.state}||'%' AND 
+gu LIKE '%'||#{vo.city}||'%' AND 
+major_field LIKE '%'||#{vo.major_option}||'%' AND
+minor_field LIKE '%'||#{vo.minor_option}||'%' AND
+active_type LIKE '%'||#{vo.active_type}||'%' AND
+target  LIKE '%'||#{vo.target_type}||'%' AND
+collect_state  LIKE '%'||#{vo.collect_state}||'%' AND
+collect_start &gt;= #{vo.collect_start} AND 
+collect_end &lt;= #{vo.collect_end} AND
+v_start &gt;= #{vo.v_start} AND
+v_end &lt;= #{vo.v_end}
+)
+AND(
+<trim prefixOverrides="OR">
+<foreach item="stp" collection="ssType">
+	
+	<if test="stp=='N'.toString()">
+	OR title LIKE '%'||#{vo.ss}||'%' 
+	</if>
+	
+	<if test="stp=='C'.toString()">
+	OR centername LIKE '%'||#{vo.ss}||'%' 
+	</if>
+	
+	<if test="stp=='L'.toString()">
+	OR  si LIKE '%'||#{vo.ss}||'%'
+	OR  gu LIKE '%'||#{vo.ss}||'%'
+	</if>
+	
+	<if test="stp=='F'.toString()">
+	OR major_field LIKE '%'||#{vo.ss}||'%' 
+	OR minor_field LIKE '%'||#{vo.ss}||'%' 
+	</if>
+	
+</foreach>
+</trim>
+)
+AND(
+
+<trim prefixOverrides="OR">
+<foreach item="wt" collection="weekType">
+	
+	<if test="wt=='D'.toString()">
+	OR RUNDATE LIKE '%'||'월'||'%' 
+	OR RUNDATE LIKE '%'||'화'||'%' 
+	OR RUNDATE LIKE '%'||'수'||'%' 
+	OR RUNDATE LIKE '%'||'목'||'%' 
+	OR RUNDATE LIKE '%'||'금'||'%' 
+	
+	</if>
+	
+	<if test="wt=='E'.toString()">
+	OR RUNDATE LIKE '%'||'토'||'%'
+	OR RUNDATE LIKE '%'||'일'||'%' 
+	</if>
+	
+	
+	
+</foreach>
+</trim>
+
+)
+
+AND(
+<trim prefixOverrides="OR">
+<foreach item="vt" collection="vType">
+	
+	<if test="vt=='A'.toString()">
+	OR VOLUNTEER_TYPE LIKE '%'||'성인'||'%' 
+	
+	
+	</if>
+	
+	<if test="vt=='C'.toString()">
+	OR VOLUNTEER_TYPE LIKE '%'||'청소년'||'%'
+	
+	</if>
+	
+	
+	
+</foreach>
+</trim>
+
+
+)
+
+))
+WHERE num BETWEEN #{start} AND #{end}
+</select>
+
+
+<select id="programTotalPage" parameterType="map" resultType="int">
+SELECT COUNT(*) FROM v_program
+WHERE (
+si LIKE '%'||#{vo.state}||'%' AND 
+gu LIKE '%'||#{vo.city}||'%' AND 
+major_field LIKE '%'||#{vo.major_option}||'%' AND
+minor_field LIKE '%'||#{vo.minor_option}||'%' AND
+active_type LIKE '%'||#{vo.active_type}||'%' AND
+target  LIKE '%'||#{vo.target_type}||'%' AND
+collect_state  LIKE '%'||#{vo.collect_state}||'%' AND
+collect_start &gt;= #{vo.collect_start} AND 
+collect_end &lt;= #{vo.collect_end} AND
+v_start &gt;= #{vo.v_start} AND
+v_end &lt;= #{vo.v_end}
+)
+AND(
+<trim prefixOverrides="OR">
+<foreach item="stp" collection="ssType">
+	
+	<if test="stp=='N'.toString()">
+	OR title LIKE '%'||#{vo.ss}||'%' 
+	</if>
+	
+	<if test="stp=='C'.toString()">
+	OR centername LIKE '%'||#{vo.ss}||'%' 
+	</if>
+	
+	<if test="stp=='L'.toString()">
+	OR  si LIKE '%'||#{vo.ss}||'%'
+	OR  gu LIKE '%'||#{vo.ss}||'%'
+	</if>
+	
+	<if test="stp=='F'.toString()">
+	OR major_field LIKE '%'||#{vo.ss}||'%' 
+	OR minor_field LIKE '%'||#{vo.ss}||'%' 
+	</if>
+	
+</foreach>
+</trim>
+)
+AND(
+
+<trim prefixOverrides="OR">
+<foreach item="wt" collection="weekType">
+	
+	<if test="wt=='D'.toString()">
+	OR RUNDATE LIKE '%'||'월'||'%' 
+	OR RUNDATE LIKE '%'||'화'||'%' 
+	OR RUNDATE LIKE '%'||'수'||'%' 
+	OR RUNDATE LIKE '%'||'목'||'%' 
+	OR RUNDATE LIKE '%'||'금'||'%' 
+	
+	</if>
+	
+	<if test="wt=='E'.toString()">
+	OR RUNDATE LIKE '%'||'토'||'%'
+	OR RUNDATE LIKE '%'||'일'||'%' 
+	</if>
+	
+	
+	
+</foreach>
+</trim>
+
+)
+
+AND(
+<trim prefixOverrides="OR">
+<foreach item="vt" collection="vType">
+	
+	<if test="vt=='A'.toString()">
+	OR VOLUNTEER_TYPE LIKE '%'||'성인'||'%' 
+	
+	
+	</if>
+	
+	<if test="vt=='C'.toString()">
+	OR VOLUNTEER_TYPE LIKE '%'||'청소년'||'%'
+	
+	</if>
+	
+	
+	
+</foreach>
+</trim>
+
+
+)
+
+
+</select>
+ </mapper>
