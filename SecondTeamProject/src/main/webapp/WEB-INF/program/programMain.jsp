@@ -6,6 +6,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<style type="text/css">
+
+</style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="author" content="Untree.co">
 	<link rel="shortcut icon" href="../favicon.png">
@@ -33,6 +37,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+
  <tiles:insertAttribute name="header"/>
  <div class="col-sm-2">
   <tiles:insertAttribute name="aside"/>
@@ -41,10 +46,11 @@
  <div class="col-sm-10">
   <tiles:insertAttribute name="content"/>
  </div>
- 
- 
+
+
+
   <tiles:insertAttribute name="footer"/>
-  
+ 
   <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/tiny-slider.js"></script>
 
