@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+<!-- AOP -->
+<aop:aspectj-autoproxy/>
+<!-- 사용자정의 메모리할당 -->
+<context:component-scan base-package="com.sist.*"/>
+<!-- 타일즈세팅 -->
+<bean id="tilesConfigurer"
+class="org.springframework.web.servlet.view.tiles3.TilesConfigurer"
+p:definitions="/WEB-INF/config/tiles.xml"
+/>
+
+<bean id="tilesResolver"
+class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView"
+p:order="0"
+/>
+
+
+<!-- 뷰리졸버세팅 -->
+<bean id="viewResolver"
+class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+p:prefix="/"
+p:suffix=".jsp"
+p:order="1"
+/>
+
+<!-- 인터셉터 -->
+  
+  
+  <!-- <mvc:interceptors>
+       <mvc:interceptor>
+        <mvc:mapping path="/**/*"/>
+     
+        
+        <bean id="foodInter" class="com.sist.inter.FoodInterceptor"/>
+        
+       </mvc:interceptor>
+     </mvc:interceptors>
+      -->
+        <!-- <mvc:exclude-mapping path="/main/main.do"/> 
+             제외시에 사용 -->
+             
+             
+<!-- 파일업로드 -->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+
+/>
+
+
+
+<!--자바스크림트에 한글전송:꺠짐방지-->
+<!-- <mvc:annotation-driven>
+    <mvc:message-converters>
+     <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+       <property name="supportedMediaTypes">
+         <list>
+           <value>text/html;charset=UTF-8</value>
+         </list>
+       </property>
+     </bean>
+    </mvc:message-converters>
+   </mvc:annotation-driven>
+   
+    -->
+
+
+</beans>
