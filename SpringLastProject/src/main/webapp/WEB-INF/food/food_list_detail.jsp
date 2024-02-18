@@ -149,7 +149,7 @@ a.link:hover,img.img_click:hover{
     		 });    
 		  },
 		  goback(){
-			  window.history.back()
+			  location.href="../food/food_list.do"
 		  }
 	  }
   }).mount("#foodApp")

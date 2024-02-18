@@ -15,16 +15,16 @@ a.link:hover,img.img_click:hover{
 </style>
 </head>
 <body>
-<div class="wrapper row3" id="foodApp">
+<div class="wrapper row3">
   <main class="container clear"> 
-    <h2 class="sectiontitle">맛집 목록</h2>
+    <h2 class="sectiontitle">레시피 목록</h2>
     <!-- main body --> 
-    <div class="content" > 
+    <div class="content" id="recipeApp"> 
       <div id="gallery">
         <figure>
-          <header class="heading"></header>
+          <header class="heading">총 <span style="font-size: 30px;color:green">{{count}}</span>개의 맛있는 레시피가 있습니다.</header>
           <ul class="nospace clear">
-            <li v-for="(vo,index) in food_list" :class="index%4==0?'one_quarter first':'one_quarter'"><a :href="'../food/food_before_list_detail.do?fno='+vo.fno"><img :src="'http://www.menupan.com'+vo.poster" :title="vo.name"></a></li>
+            <li v-for="(vo,index) in recipe_list" :class="index%4==0?'one_quarter first':'one_quarter'"><a :href="'../recipe/recipe_detail.do?no='+vo.no"><img :src="vo.poster" :title="vo.title"></a></li>
           </ul>
           <figcaption></figcaption>
         </figure>
@@ -39,16 +39,6 @@ a.link:hover,img.img_click:hover{
       </div>
     <!-- / main body -->
     <div class="clear"></div>
-    <div>
-      <h3>최근 방문 맛집</h3>
-      <hr>
-      <span v-for="vo in cookie_list">
-       <a :href="'../food/food_list_detail.do?fno='+vo.fno">
-        <img :src="'http://www.menupan.com'+vo.poster" 
-           style="width: 100px;height:100px;margin-left: 5px">
-       </a>
-      </span>
-    </div>
   </main>
 </div>
 <script>
@@ -56,14 +46,20 @@ a.link:hover,img.img_click:hover{
 	  // 데이터 관리 => 멤버변수 => this.
 	  data(){
 		  return {
-			  food_list:[],
+			  recipe_list:[],
 			  curpage:1,
 			  totalpage:0,
 			  startPage:0,
 			  endPage:0,
-			  cookie_list:[]
+			  count:''
 		  }
-	  },
+	  }/* ,
+	  computed:{
+		 currency:function(value){
+			 let num=new Number(value);
+			 return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,")
+		 } 
+	  } */,
 	  mounted(){
 		  // 브라우저에 화면에 HTML이 실행된 경우에 처리 => 자동 호출 함수 
 		  /*
@@ -89,31 +85,18 @@ a.link:hover,img.img_click:hover{
 	  methods:{
 		  // 공통으로 사용되는 함수 => 반복제거 
 		  dataRecv(){
-			  axios.get('../food/food_list_vue.do',{
+			  axios.get('../recipe/recipe_test_vue.do',{
 				  params:{
 					  page:this.curpage
 				  }
 			  }).then(response=>{
 				  console.log(response.data)
-				  this.food_list=response.data
-			  })
-			  
-			  // 페이지 
-			  axios.get('../food/food_page_vue.do',{
-				  params:{
-					  page:this.curpage
-				  }
-			  }).then(response=>{
-				  console.log(response.data)
-				  this.curpage=response.data.curpage
-				  this.totalpage=response.data.totalpage
-				  this.startPage=response.data.startPage
-				  this.endPage=response.data.endPage
-			  })
-			  
-			  axios.get('../food/food_cookie_vue.do').then(response=>{
-				  console.log(response.data)
-				  this.cookie_list=response.data
+				  this.recipe_list=response.data.list
+				  this.curpage=response.data.pages.curpage
+				  this.totalpage=response.data.pages.totalpage
+				  this.startPage=response.data.pages.startPage
+				  this.endPage=response.data.pages.endPage
+				  this.count=response.data.pages.count
 			  })
 		  },
 		  range(start,end){
@@ -139,7 +122,7 @@ a.link:hover,img.img_click:hover{
 			  this.dataRecv()
 		  }
 	  }
-  }).mount("#foodApp")
+  }).mount("#recipeApp")
 </script>
 </body>
 </html>

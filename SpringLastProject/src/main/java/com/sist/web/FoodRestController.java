@@ -1,6 +1,9 @@
 package com.sist.web;
 import java.util.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -140,6 +143,35 @@ public class FoodRestController {
 	   return json;
    }
    
+   @GetMapping(value="food_cookie_vue.do",produces = "text/plain;charset=UTF-8")
+   public String food_cookie(HttpServletRequest request) throws Exception
+   {
+	   Cookie[] cookies=request.getCookies();
+	   List<FoodVO> list=new ArrayList<FoodVO>();
+	   int k=0;
+	   if(cookies!=null)
+	   {
+		   for(int i=cookies.length-1;i>=0;i--)
+		   {
+		       if(k<9)
+		       {
+		    	   // new Cookie("food_"+fno, String.valueOf(fno))
+		    	   //            =======getName() ======= getValue()
+		    	   if(cookies[i].getName().startsWith("food_"))
+		    	   {
+		    		   String fno=cookies[i].getValue();
+		    		   FoodVO vo=service.foodDetailData(Integer.parseInt(fno));
+		    		   list.add(vo);
+		    	   }
+		    	   k++;
+		       }
+		   }
+	   }
+	   
+	   ObjectMapper mapper=new ObjectMapper();
+	   String json=mapper.writeValueAsString(list);
+	   return json;
+   }
    @GetMapping(value="food_list_vue.do",produces = "text/plain;charset=UTF-8")
    public String food_list(int page) throws Exception
    {

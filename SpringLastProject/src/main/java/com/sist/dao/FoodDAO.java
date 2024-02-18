@@ -47,4 +47,9 @@ public class FoodDAO {
    {
 	  return mapper.foodTop7();   
    }
+   
+   public List<FoodVO> foodHome12()
+   {
+	   return mapper.foodHome12();
+   }
 }
