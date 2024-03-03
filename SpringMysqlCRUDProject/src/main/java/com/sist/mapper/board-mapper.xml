@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.sist.mapper.BoardMapper">
+ <select id="boardListData" resultType="BoardVO" parameterType="int">
+ SELECT no,subject,name,DATE_FORMAT(regdate,'%y-%m-%d') as dbday,hit
+ FROM BOARD
+ ORDER BY no DESC
+ LIMIT #{start},10
+ </select>
+ 
+ <select id="boardTotalPage" resultType="int">
+ SELECT CEIL(COUNT(*)/10.0) FROM BOARD
+ </select>
+ 
+ <insert id="boardInsert" parameterType="BoardVO">
+ insert into board(name,subject,content,pwd)
+ values(#{name},#{subject},#{content},#{pwd})
+ </insert>
+ </mapper>

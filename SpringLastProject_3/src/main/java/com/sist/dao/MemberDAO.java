@@ -62,4 +62,5 @@ public class MemberDAO {
    {
 	   mapper.lastLoginUpdate(userId);
    }
+   
 }
